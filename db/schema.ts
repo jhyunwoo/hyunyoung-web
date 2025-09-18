@@ -84,3 +84,23 @@ export const authenticators = sqliteTable(
     }),
   }),
 );
+
+export const libraryReservations = sqliteTable("libraryReservation", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  studentId: text("studentId").notNull(),
+  library: text("library").notNull(),
+  room: text("room").notNull(),
+  roomNumber: text("roomNumber").notNull(),
+  date: text("date").notNull(),
+  time: text("time").notNull(),
+  duration: text("duration").notNull(),
+  participants: text("participants").notNull(), // JSON stringified array of participants
+  createdAt: integer("createdAt", { mode: "timestamp_ms" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});

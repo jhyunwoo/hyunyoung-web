@@ -13,12 +13,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html
-      lang="ko"
-      className={
-        "bg-neutral-50 dark:bg-neutral-950 dark:text-neutral-50 text-neutral-950"
-      }
-    >
+    <html lang="ko" className={"bg-neutral-100 text-neutral-950"}>
       <body>{children}</body>
     </html>
   );
