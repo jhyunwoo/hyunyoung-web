@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { createLibraryReservationAction } from "@/app/yonsei-library/actions";
+import DataForm from "@/components/data-form";
+import { useFormStatus } from "react-dom";
 
 const library = {
   학술정보관: {
@@ -119,6 +121,21 @@ const library = {
   },
 };
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type={"submit"}
+      className={
+        "bg-neutral-950 text-neutral-50 p-2 px-4 rounded-lg text-lg font-semibold w-full md:col-span-2 lg:col-span-3"
+      }
+      disabled={pending}
+    >
+      {!pending ? "예약" : "예약 중..."}
+    </button>
+  );
+}
+
 export default function BookLibraryRoomForm() {
   const [selectedLibrary, setSelectedLibrary] = useState<
     "학술정보관" | "중앙도서관"
@@ -160,163 +177,248 @@ export default function BookLibraryRoomForm() {
     }
   }, [selectedRoom, selectedLibrary]);
 
+  useEffect(() => {
+    console.log(JSON.stringify(participants));
+  }, [participants]);
+
   return (
-    <form
-      className={"flex flex-col gap-2"}
+    <DataForm
+      className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"}
       action={createLibraryReservationAction}
     >
-      {/* ... 학번, 비밀번호, 시간, 기간 select는 동일 ... */}
-      <input
-        name={"studentId"}
-        required={true}
-        type={"text"}
-        placeholder={"학번"}
-      />
-      <input
-        name={"password"}
-        required={true}
-        type={"password"}
-        placeholder={"포탈 비밀번호"}
-      />
-      <input name={"date"} type={"date"} />
-      <select name="time">
-        <option value="09:00">09:00</option>
-        <option value="09:30">09:30</option>
-        <option value="10:00">10:00</option>
-        <option value="10:30">10:30</option>
-        <option value="11:00">11:00</option>
-        <option value="11:30">11:30</option>
-        <option value="12:00">12:00</option>
-        <option value="12:30">12:30</option>
-        <option value="13:00">13:00</option>
-        <option value="13:30">13:30</option>
-        <option value="14:00">14:00</option>
-        <option value="14:30">14:30</option>
-        <option value="15:00">15:00</option>
-        <option value="15:30">15:30</option>
-        <option value="16:00">16:00</option>
-        <option value="16:30">16:30</option>
-        <option value="17:00">17:00</option>
-        <option value="17:30">17:30</option>
-        <option value="18:00">18:00</option>
-        <option value="18:30">18:30</option>
-        <option value="19:00">19:00</option>
-        <option value="19:30">19:30</option>
-        <option value="20:00">20:00</option>
-        <option value="20:30">20:30</option>
-        <option value="21:00">21:00</option>
-      </select>
-      <select name={"duration"}>
-        <option value="30분">30분</option>
-        <option value="1시간">1시간</option>
-        <option value="1시간30분">1시간 30분</option>
-        <option value="2시간">2시간</option>
-      </select>
-
-      <select
-        name={"library"}
-        value={selectedLibrary} // [추가됨] state와 UI를 일치시킴
-        onChange={(e) =>
-          setSelectedLibrary(e.target.value as "학술정보관" | "중앙도서관")
-        }
-      >
-        <option value={"학술정보관"}>학술정보관</option>
-        <option value={"중앙도서관"}>중앙도서관</option>
-      </select>
-      <select
-        name={"room"}
-        value={selectedRoom} // [추가됨] state와 UI를 일치시킴
-        onChange={(e) => setSelectedRoom(e.target.value)}
-      >
-        {library[selectedLibrary]?.room.map((roomData, i) => (
-          <option key={i} value={roomData.name}>
-            {roomData.name}
-          </option>
-        ))}
-      </select>
-      <select
-        name={"roomNumber"}
-        value={selectedRoomNumber} // [추가됨] state와 UI를 일치시킴
-        // [수정됨] 올바른 state 업데이트 함수 연결
-        onChange={(e) => setSelectedRoomNumber(e.target.value)}
-      >
-        {roomNumberList?.map((roomData, i) => (
-          <option key={i} value={roomData.roomNumber}>
-            {roomData.roomNumber} ({roomData.min}인 ~ {roomData.max}인)
-          </option>
-        ))}
-      </select>
+      <div>
+        <p className={"text-sm text-neutral-700 px-1"}>학번 (10자리)</p>
+        <input
+          className={
+            "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
+          }
+          name={"studentId"}
+          required={true}
+          type={"text"}
+          placeholder={"학번"}
+        />
+      </div>
+      <div>
+        <p className={"text-sm text-neutral-700 px-1"}>포털 비밀번호</p>
+        <input
+          className={
+            "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
+          }
+          name={"password"}
+          required={true}
+          type={"password"}
+          placeholder={"포탈 비밀번호"}
+        />
+      </div>
+      <div>
+        <p className={"text-sm text-neutral-700 px-1"}>예약 날짜</p>
+        <input
+          name={"date"}
+          type={"date"}
+          required={true}
+          className={
+            "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
+          }
+        />
+      </div>
+      <div>
+        <p className={"text-sm text-neutral-700 px-1"}>예약 시간</p>
+        <select
+          name="time"
+          required={true}
+          className={
+            "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
+          }
+        >
+          <option value="09:00">09:00</option>
+          <option value="09:30">09:30</option>
+          <option value="10:00">10:00</option>
+          <option value="10:30">10:30</option>
+          <option value="11:00">11:00</option>
+          <option value="11:30">11:30</option>
+          <option value="12:00">12:00</option>
+          <option value="12:30">12:30</option>
+          <option value="13:00">13:00</option>
+          <option value="13:30">13:30</option>
+          <option value="14:00">14:00</option>
+          <option value="14:30">14:30</option>
+          <option value="15:00">15:00</option>
+          <option value="15:30">15:30</option>
+          <option value="16:00">16:00</option>
+          <option value="16:30">16:30</option>
+          <option value="17:00">17:00</option>
+          <option value="17:30">17:30</option>
+          <option value="18:00">18:00</option>
+          <option value="18:30">18:30</option>
+          <option value="19:00">19:00</option>
+          <option value="19:30">19:30</option>
+          <option value="20:00">20:00</option>
+          <option value="20:30">20:30</option>
+          <option value="21:00">21:00</option>
+        </select>
+      </div>
 
       <div>
-        <input hidden={true} value={JSON.stringify(participants)} />
-        <input
-          placeholder={"참가자 학번"}
-          type={"text"}
-          value={participantId} // [추가됨] state와 UI를 일치시킴
-          // [수정됨] 올바른 state 업데이트 함수 연결
-          onChange={(e) => setParticipantId(e.target.value)}
-        />
-        <input
-          placeholder={"참가자 전화번호 마지막 4자리"}
-          type={"text"}
-          value={participantPhone} // [추가됨] state와 UI를 일치시킴
-          onChange={(e) => setParticipantPhone(e.target.value)}
-        />
-        <button
-          type={"button"}
-          onClick={() => {
-            if (participantId.length !== 10 || participantPhone.length !== 4) {
-              alert("참가자 학번과 전화번호를 올바르게 입력해주세요.");
-              return;
-            }
-            if (participants.find((p) => p.id === participantId)) {
-              alert("이미 추가된 참가자입니다.");
-              return;
-            }
-            setParticipants([
-              ...participants,
-              { id: participantId, phone: participantPhone },
-            ]);
-            setParticipantId("");
-            setParticipantPhone("");
-          }}
+        <p className={"text-sm text-neutral-700 px-1"}>예약 날짜</p>
+        <select
+          name={"duration"}
+          required={true}
+          className={
+            "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
+          }
         >
-          추가
-        </button>
+          <option value="30분">30분</option>
+          <option value="1시간">1시간</option>
+          <option value="1시간30분">1시간 30분</option>
+          <option value="2시간">2시간</option>
+        </select>
       </div>
-      <div className={"bg-neutral-100 "}>
-        {participants.map((participant, i) => (
-          <div
-            key={i}
-            className={
-              "bg-neutral-50 p-1 px-2 rounded-lg flex justify-center gap-1"
-            }
-          >
-            {participant.id} ({participant.phone})
-            <button
+
+      <div>
+        <p className={"text-sm text-neutral-700 px-1"}>예약 날짜</p>
+        <select
+          name={"library"}
+          value={selectedLibrary} // [추가됨] state와 UI를 일치시킴
+          onChange={(e) =>
+            setSelectedLibrary(e.target.value as "학술정보관" | "중앙도서관")
+          }
+          required={true}
+          className={
+            "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
+          }
+        >
+          <option value={"학술정보관"}>학술정보관</option>
+          <option value={"중앙도서관"}>중앙도서관</option>
+        </select>
+      </div>
+
+      <div>
+        <p className={"text-sm text-neutral-700 px-1"}>세미나룸 그룹</p>
+        <select
+          name={"room"}
+          value={selectedRoom} // [추가됨] state와 UI를 일치시킴
+          onChange={(e) => setSelectedRoom(e.target.value)}
+          required={true}
+          className={
+            "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
+          }
+        >
+          {library[selectedLibrary]?.room.map((roomData, i) => (
+            <option key={i} value={roomData.name}>
+              {roomData.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <p className={"text-sm text-neutral-700 px-1"}>세미나룸</p>
+        <select
+          name={"roomNumber"}
+          value={selectedRoomNumber} // [추가됨] state와 UI를 일치시킴
+          // [수정됨] 올바른 state 업데이트 함수 연결
+          onChange={(e) => setSelectedRoomNumber(e.target.value)}
+          required={true}
+          className={
+            "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
+          }
+        >
+          {roomNumberList?.map((roomData, i) => (
+            <option key={i} value={roomData.roomNumber}>
+              {roomData.roomNumber} ({roomData.min}인 ~ {roomData.max}인)
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className={"md:col-span-2 lg:col-span-3 flex flex-col gap-2"}>
+        <p className={"text-sm text-neutral-700 px-1"}>참가자</p>
+        <input
+          hidden={true}
+          value={JSON.stringify(participants)}
+          name={"participants"}
+          readOnly={true}
+        />
+        <div className={"flex gap-2"}>
+          <div className={"flex gap-2 flex-col w-full items-center"}>
+            <input
+              placeholder={"참가자 학번"}
+              type={"text"}
+              value={participantId} // [추가됨] state와 UI를 일치시킴
+              // [수정됨] 올바른 state 업데이트 함수 연결
+              onChange={(e) => setParticipantId(e.target.value)}
               className={
-                "p-1 px-2 rounded-lg bg-red-600 text-neutral-50 text-sm"
+                "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
               }
+            />
+            <input
+              placeholder={"참가자 전화번호 마지막 4자리"}
+              type={"text"}
+              value={participantPhone} // [추가됨] state와 UI를 일치시킴
+              onChange={(e) => setParticipantPhone(e.target.value)}
+              className={
+                "bg-neutral-100 p-2 px-3 rounded-lg focus:ring-2 ring-neutral-600 focus:outline-none w-full"
+              }
+            />
+            <button
               type={"button"}
-              onClick={() =>
-                setParticipants((prev) =>
-                  prev.filter((p) => p.id !== participant.id),
-                )
+              onClick={() => {
+                if (
+                  participantId.length !== 10 ||
+                  participantPhone.length !== 4
+                ) {
+                  alert("참가자 학번과 전화번호를 올바르게 입력해주세요.");
+                  return;
+                }
+                if (participants.find((p) => p.id === participantId)) {
+                  alert("이미 추가된 참가자입니다.");
+                  return;
+                }
+                setParticipants([
+                  ...participants,
+                  { id: participantId, phone: participantPhone },
+                ]);
+                setParticipantId("");
+                setParticipantPhone("");
+              }}
+              className={
+                " ring-2 ring-neutral-800 text-sm p-2 rounded-lg w-full"
               }
             >
-              삭제
+              추가
             </button>
           </div>
-        ))}
+          <div
+            className={
+              "bg-neutral-100 p-1 w-full flex flex-col gap-1 items-start"
+            }
+          >
+            {participants.map((participant, i) => (
+              <div
+                key={i}
+                className={
+                  "bg-neutral-50 p-1 px-2 rounded-lg flex items-center gap-1"
+                }
+              >
+                {participant.id} ({participant.phone})
+                <button
+                  className={
+                    "p-1 px-2 rounded-lg bg-red-600 text-neutral-50 text-sm"
+                  }
+                  type={"button"}
+                  onClick={() =>
+                    setParticipants((prev) =>
+                      prev.filter((p) => p.id !== participant.id),
+                    )
+                  }
+                >
+                  삭제
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <button
-        type={"submit"}
-        className={
-          "bg-neutral-950 text-neutral-50 p-2 px-4 rounded-lg text-lg font-semibold w-full"
-        }
-      >
-        예약
-      </button>
-    </form>
+      <SubmitButton />
+    </DataForm>
   );
 }

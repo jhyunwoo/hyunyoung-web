@@ -10,12 +10,13 @@
 		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
-		"db:push": "drizzle-kit generate && drizzle-kit migrate"
-	},
+		"db:push": "drizzle-kit generate && drizzle-kit migrate",
+      "db:push:local": "drizzle-kit generate && ./local-generate.sh"
+    },
 	"dependencies": {
 		"@auth/drizzle-adapter": "^1.10.0",
 		"@libsql/client": "^0.15.15",
-		"@opennextjs/cloudflare": "^1.8.2",
+		"@opennextjs/cloudflare": "^1.8.3",
 		"dotenv": "^17.2.2",
 		"drizzle-orm": "^0.44.5",
 		"next": "^15.5.3",
@@ -26,15 +27,15 @@
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.1",
 		"@tailwindcss/postcss": "^4.1.13",
-		"@types/node": "^20.19.16",
+		"@types/node": "^20.19.17",
 		"@types/react": "^19.1.13",
 		"@types/react-dom": "^19.1.9",
 		"drizzle-kit": "^0.31.4",
-		"eslint": "^9.35.0",
+		"eslint": "^9.36.0",
 		"eslint-config-next": "15.4.6",
 		"prettier": "^3.6.2",
 		"tailwindcss": "^4.1.13",
 		"typescript": "^5.9.2",
-		"wrangler": "^4.37.1"
+		"wrangler": "^4.38.0"
 	}
 }
