@@ -5,6 +5,7 @@ import { libraryReservations } from "@/db/schema";
 import { forbidden } from "next/navigation";
 import DataForm from "@/components/data-form";
 import { deleteLibraryReservationAction } from "@/app/yonsei-library/actions";
+import DeleteButton from "@/app/yonsei-library/delete-button";
 
 export default async function BookingHistory() {
   const db = getDb();
@@ -46,12 +47,7 @@ export default async function BookingHistory() {
               readOnly={true}
               name={"reservationId"}
             />
-            <button
-              type={"submit"}
-              className={"bg-red-500 text-neutral-50 p-1 px-2 rounded-lg"}
-            >
-              삭제
-            </button>
+            <DeleteButton />
           </DataForm>
         </div>
       ))}
