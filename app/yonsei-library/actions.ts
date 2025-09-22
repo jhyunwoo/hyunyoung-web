@@ -34,20 +34,6 @@ export async function createLibraryReservationAction(
     ? JSON.parse(participantsRaw)
     : [];
 
-  // --- 오류 수정 부분 끝 ---
-
-  console.log(
-    studentId,
-    password,
-    date,
-    time,
-    duration,
-    library,
-    room,
-    roomNumber,
-    participants,
-  );
-
   if (
     !studentId ||
     !password ||

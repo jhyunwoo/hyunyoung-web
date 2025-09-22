@@ -1,6 +1,14 @@
 import Link from "next/link";
+import SignOutButton from "@/components/sign-out-button";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect("/auth/sign-in");
+  }
   return (
     <div className={"w-full h-screen flex items-center justify-center"}>
       <div
@@ -17,6 +25,7 @@ export default function HomePage() {
         >
           도서관 세미나룸 예약
         </Link>
+        <SignOutButton />
       </div>
     </div>
   );

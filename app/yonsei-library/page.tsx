@@ -1,6 +1,7 @@
 import BookLibraryRoomForm from "@/app/yonsei-library/book-library-room-form";
 import { Suspense } from "react";
 import BookingHistory from "@/app/yonsei-library/booking-history";
+import Link from "next/link";
 
 export default function YLBSPage() {
   return (
@@ -15,6 +16,9 @@ export default function YLBSPage() {
           "w-full p-4 bg-neutral-50 rounded-xl max-w-4xl flex flex-col gap-2 min-h-1/3"
         }
       >
+        <Link href={"/"} className={"hover:underline"}>
+          홈페이지
+        </Link>
         <h1 className={"text-2xl font-bold"}>도서관 세미나룸 예약</h1>
         <BookLibraryRoomForm />
       </div>
